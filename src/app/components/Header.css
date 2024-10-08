@@ -1,0 +1,133 @@
+/* Header.css */
+.header {
+    background-color: #101728;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .header__container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .header__icon {
+    font-size: 24px;
+    cursor: pointer;
+  }
+  
+  .header__logo {
+    height: 40px;
+    border-radius: 50%;
+  }
+  
+  /* Estilos do menu lateral */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -250px;
+    width: 250px;
+    height: 100%;
+    background-color: #1e1e2f;
+    padding: 20px;
+    transition: left 0.3s ease;
+    z-index: 1000;
+  }
+  
+  .sidebar--open {
+    left: 0;
+  }
+  
+  .sidebar__header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .sidebar__profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .sidebar__user-info h2 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+  }
+  
+  .sidebar__user-info p {
+    margin: 0;
+    font-size: 14px;
+    color: #a0aec0;
+  }
+  
+  .sidebar__menu {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .sidebar__menu li {
+    margin-bottom: 15px;
+  }
+  
+  .sidebar__menu li a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .sidebar__menu li a i {
+    margin-right: 10px;
+  }
+  
+  /* Responsividade para ajustar o menu e o header */
+  @media (max-width: 768px) {
+    .header__logo {
+      height: 30px;
+    }
+  
+    .sidebar {
+      width: 200px;
+    }
+  }
+
+  /* Estilos do círculo de notificação */
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* Animação de balanço */
+@keyframes shake {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(-15deg); }
+  50% { transform: rotate(15deg); }
+  75% { transform: rotate(-10deg); }
+}
+
+/* Adiciona a animação ao sino */
+.shake {
+  animation: shake 0.5s ease;
+}
+
+  

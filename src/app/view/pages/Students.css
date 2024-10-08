@@ -1,0 +1,132 @@
+.search-bar {
+    position: fixed;
+    top: 0px;
+    right: 1px;
+    padding: 20px 20px;
+    background-color: #fff;
+    z-index: 100;
+    width: 100vw; /* Garante que a barra ocupe 100% da largura da tela */
+    box-sizing: border-box; /* Inclui padding e borda no cálculo do width */
+    margin-bottom: 20px;
+    margin-top: 80px;
+    margin-left: 18px;
+    height: 100px;
+}
+  
+.search-bar input {
+    font-family: 'CodecPro', sans-serif;
+    flex-grow: 1;
+    border: 3px solid #101728;
+    border-radius: 100%;
+    padding: 10px 20px;
+    font-size: 20px !important;
+    color: #000000;
+    padding-left: 55px;
+}
+  
+.search-bar input::placeholder {
+    color: rgba(16, 23, 40, 0.3);
+    position: relative;
+    font-family: 'CodecProExtraBold', sans-serif;
+}
+  
+.search-icon {
+    position: relative;
+    top: -43px;
+    left: 15px;
+    color: #101728;
+    font-size: 25px;
+}
+  
+  /* Conteúdo abaixo da barra de pesquisa */
+.content-container {
+    margin-top: 0;
+    padding-top: 230px; /* Espaço para a barra de pesquisa fixa */
+    padding-left: 20px;
+    padding-right: 20px;
+    overflow-y: auto; /* Permite rolar o conteúdo */
+}
+
+  
+  /* Cartões de alunos */
+  .aluno-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+    padding: 19px;
+    transition: transform 0.2s;
+  }
+  
+  .aluno-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .card-title {
+    font-size: 22px;
+    font-weight: bold;
+  }
+  
+  .card-text {
+    font-size: 14px;
+    color: #555;
+  }
+  
+  /* Botão de adicionar fixo no centro inferior */
+  .add-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+    background-color: #101728;
+    color: white;
+    border-radius: 50%;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: pointer;
+    font-size: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .add-button:hover {
+    background-color: #ff5722;
+  }
+  
+  /* Container principal */
+  .container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* Responsividade para telas grandes */
+  @media (min-width: 992px) {
+    .content-container .row {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    
+    .content-container .col-lg-4 {
+      flex: 1;
+      max-width: 33.3333%;
+    }
+  }
+  
+  @media (max-width: 991.98px) {
+    .content-container .col-md-6 {
+      flex: 1;
+      max-width: 50%;
+      padding-top: 10px;
+    }
+  }
+  
+  @media (max-width: 767.98px) {
+    .content-container .col-12 {
+      flex: 1;
+      max-width: 100%;
+      padding-top: 10px;
+    }
+  }
+  

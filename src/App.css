@@ -36,3 +36,15 @@
     transform: rotate(360deg);
   }
 }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  /*background-color: #101728 !important; Definindo a cor de fundo para toda a tela */
+  font-family: 'CodecPro', sans-serif; /* Aplicando a fonte globalmente, se necessário */
+  display: flex !important;
+  justify-content: center; /* Centralizando o conteúdo principal */
+  align-items: center; /* Centralizando o conteúdo principal verticalmente */
+}

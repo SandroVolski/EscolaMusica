@@ -1,0 +1,100 @@
+@font-face {
+  font-family: 'CodecPro';
+  src: url('../assets/fonts/CodecPro.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'CodecProExtraBold';
+  src: url('../assets/fonts/CodecProExtraBold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* Fundo opaco ao abrir o Sidebar */
+.menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fundo escuro */
+    z-index: 999; /* Certifique-se que o fundo está abaixo do Sidebar */
+  }
+  
+  /* Sidebar */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -75%; /* Inicialmente fora da tela */
+    width: 75%;
+    height: 100%;
+    background-color: #101728;
+    transition: left 0.3s ease;
+    z-index: 2000; /* Sidebar acima do fundo opaco */
+  }
+  
+  .sidebar.open {
+    left: 0; /* Quando estiver aberto */
+  }
+  
+  .sidebar-header {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background-color: #101728;
+    color: white;
+  }
+  
+  .user-icon {
+    margin-right: 10px;
+  }
+  
+  .user-name {
+    font-size: 150%;
+    font-weight: bold;
+    font-family: 'CodecProExtraBold';
+    margin-left: 20px;
+  }
+  
+  .sidebar-links {
+    background-color: white;
+    height: 100%;
+  }
+  
+  .sidebar-links ul {
+    background-color: white;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .sidebar-links li {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    font-size: 18px;
+    color: #101728;
+  }
+  
+  .sidebar-links li span {
+    margin-top: 5px;
+    margin-left: 20px;
+    font-size: 150%;
+    font-family: 'CodecPro';
+  }
+  
+  .sidebar-links li:hover {
+    background-color: #f0f0f0;
+  }
+
+  .photo {
+    width: 60px; /* Largura igual à altura */
+    height: 60px; /* Altura igual à largura */
+    border-radius: 50%; /* Garante que a imagem tenha bordas arredondadas (círculo) */
+    border: 3px solid white; /* Define a borda de 3px branca */
+    object-fit: cover; /* Garante que a imagem seja cortada para preencher o círculo */
+    display: block; /* Garante que a imagem não tenha margens extras indesejadas */
+    margin-right: 10px;
+}

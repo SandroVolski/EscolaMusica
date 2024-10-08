@@ -1,0 +1,314 @@
+/* Estilização do layout geral */
+@font-face {
+    font-family: 'CodecPro';
+    src: url('../../assets/fonts/CodecPro.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'CodecProExtraBold';
+    src: url('../../assets/fonts/CodecProExtraBold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+  }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0; /* Remove margens padrão */
+    padding: 0; /* Remove preenchimento padrão */
+    overflow-x: hidden; /* Impede rolagem horizontal */
+}
+
+  .navbar-dark {
+    background-color: #101728 !important;
+  }
+  
+  .header {
+    background-color: #101728;
+  }
+  
+  .logo-img {
+    height: 50px;
+  }
+  
+  .menu-card {
+    padding: 10px;
+    text-align: center;
+    background-color: #ffffff;
+    border-radius: 10px;
+  }
+  
+  .menu-card .bi {
+    font-size: 30px;
+    margin-bottom: 10px;
+  }
+  
+  body {
+    background-color: #f8f9fa;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .navbar {
+    background-color: #0d0d2b;
+    padding: 1rem;
+  }
+  
+  .icon-button {
+    color: white;
+    font-size: 1.5rem;
+  }
+  
+  .main-content {
+    text-align: center;
+    padding: 1rem;
+  }
+  
+  .main-content h2 {
+    color: #260e69;
+    
+    
+    font-size: 170%;
+    margin-top: 20%;
+    margin-bottom: 5%;
+    font-family: 'CodecProExtraBold';
+  }
+  
+  .icon-grid {
+    display: flex;
+    flex-wrap: wrap; /* Permite quebrar o conteúdo para novas linhas */
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .icon-grid > * {
+    flex: 1 1 calc(33.333% - 1rem); /* 3 colunas no celular */
+    max-width: calc(33.333% - 1rem); /* Limita a largura para 3 colunas */
+  }
+  
+  /* Media query para telas maiores */
+  @media (min-width: 768px) {
+    .icon-grid > * {
+      flex: 1 1 calc(16.666% - 1rem); /* 6 colunas (1 linha) para telas maiores */
+      max-width: calc(16.666% - 1rem); /* Limita a largura para 6 colunas */
+    }
+  }
+  
+  .icon-item {
+    display: inline-block;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+    padding: 1rem 0.5rem;
+    width: 100%; /* Define 100% de largura */
+    max-width: 28%; /* Largura máxima */
+    text-align: center;
+    margin: 0 auto; /* Centraliza o elemento */
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    cursor: pointer;
+  }
+
+  
+  .icon-item .icon {
+    font-size: 4vh;
+    color: #260e69;
+  }
+  
+  .icon-item p {
+    margin: 0;
+    color: #260e69;
+    font-weight: bold;
+    font-size: 2vh;
+    font-family: 'CodecPro';
+    margin-top: 5px;
+  }
+  
+
+  .icon-item:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    background-color: #222250;
+
+    p{
+      margin: 0;
+      color:white !important;
+      font-weight: bold;
+      font-size: 2vh;
+      font-family: 'CodecPro';
+      margin-top: 5px;
+    }
+
+    .icon{
+      font-size: 4vh;
+      color: white !important;
+    }
+  }
+
+  .next-class{
+    margin-top: 10% !important;
+  }
+
+  .next-class, .summary {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+    padding: 1rem;
+    margin: 1rem auto; /* Centraliza o elemento e mantém o espaçamento superior/inferior */
+    max-width: 97%; /* Mesma largura máxima que .icon-item */
+    
+}
+  
+  .next-class h3, .summary h3 {
+    font-family: 'CodecProExtraBold', sans-serif;
+    color: #260e69;
+  }
+  
+  
+  .class-info .student-list {
+    display: flex;
+    flex-wrap: wrap; /* Permite que os itens quebrem para a próxima linha */
+    justify-content: space-between; /* Espaçamento entre os itens */
+    margin-top: 0.5rem;
+  }
+
+  .student-list span {
+    display: flex;
+    align-items: center;
+    flex: 1 1 calc(50% - 1rem); /* 2 colunas no celular */
+    max-width: calc(50% - 1rem); /* Limite de largura para 2 colunas */
+    margin-bottom: 0.5rem; /* Espaçamento entre linhas */
+  }
+
+  /* Media query para telas maiores */
+  @media (min-width: 600px) {
+    .student-list span {
+        flex: 1 1 calc(33.33% - 1rem); /* 3 colunas para telas maiores */
+        max-width: calc(33.33% - 1rem); /* Limite de largura para 3 colunas */
+    }
+  }
+  
+  .summary-info {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 0.5rem;
+    font-family: 'CodecPro', sans-serif;
+    color: #260e69;
+  }
+  
+  .summary-info span {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+  }
+
+  /* Container do carousel */
+.carousel-container {
+    width: 100%;
+    height: 100%; /* Define a altura do contêiner */
+    overflow: hidden; /* Esconder o conteúdo que sai do contêiner */
+    position: relative;
+    height: auto;
+}
+
+/* Slides */
+.carousel-slides {
+  display: flex;
+  scroll-snap-type: x mandatory; 
+  overflow-x: auto; /* Permite rolagem horizontal */
+  scroll-behavior: smooth;
+  width: 100%; /* Ocupar toda a largura do contêiner */
+  height: 10% !important;
+  
+  
+  border: 2px solid black;
+  border-radius: 10px;
+  gap: 2rem;
+}
+
+/* Estilo para a data da aula */
+.class-date {
+  color: #00aff0;
+  font-size: 1.5rem; /* Aumenta o tamanho da fonte */
+  font-weight: bold;
+  font-family: 'CodecProExtraBold', sans-serif;
+  margin-top: -10%;
+}
+
+/* Estilo para os detalhes da turma e instrumento */
+.class-details {
+  font-family: 'CodecProExtraBold', sans-serif;
+  font-size: 1.2rem; /* Tamanho da fonte para o texto geral */
+  margin-top: -5%;
+}
+
+/* Estilo para a parte da turma (número de alunos) */
+.class-students {
+  color: #260e69;
+}
+
+/* Estilo para o instrumento */
+.class-instrument {
+  font-family: 'CodecProExtraBold', sans-serif;
+  color: #00aff0;
+  font-size: 1.2rem; /* Um pouco menor que a data */
+  
+}
+
+/* Estilo para a lista de alunos */
+.student-list {
+  display: flex;
+  gap: 0.5rem; /* Reduz o espaçamento entre os alunos */
+  flex-wrap: wrap; /* Permite que os itens quebrem linha se necessário */
+  font-family: 'CodecPro', sans-serif;
+  color: #260e69;
+  justify-content: center; /* Centraliza os itens horizontalmente */
+  align-items: center;
+  margin-left: 12%;
+}
+
+
+
+
+
+.class-info {
+  border-radius: 10px;
+  padding: 1rem;
+  margin: 1rem 0;
+
+  min-width: 100%; /* Cada slide ocupará a largura total do container */
+  padding: 20px;
+  box-sizing: border-box;
+  scroll-snap-align: start; /* Faz o snap dos slides ao rolar */
+}
+
+.class-info-summary{
+  font-family: 'CodecProExtraBold', sans-serif;
+  color: #3f5a9d;
+  font-size: 1.1rem;
+
+}
+
+/* Indicadores */
+.carousel-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.indicator {
+  width: 10px;
+  height: 10px;
+  background-color: lightgray;
+  border-radius: 50%;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.indicator.active {
+  background-color: #260e69;
+}
+
+  
+  
