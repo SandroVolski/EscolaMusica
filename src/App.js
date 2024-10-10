@@ -12,6 +12,7 @@ import Students from '../src/app/view/pages/Students';
 import Finance from '../src/app/view/pages/Finance';
 import Calendar from '../src/app/view/pages/Calendar';
 import RegisterStudent from '../src/app/view/pages/RegisterStudent';
+import RegisterClasses from '../src/app/view/pages/RegisterClasses';
 import Receipt from '../src/app/view/pages/Receipt';
 import Classes from '../src/app/view/pages/Classes';
 
@@ -31,6 +32,7 @@ function App() {
         <Route path="/registerstudent" element={<RegisterStudent />} />
         <Route path="/receipt" element={<Receipt />} />
         <Route path="/classes" element={<Classes />} />
+        <Route path="/registerclasses" element={<RegisterClasses />} />
 
       </Routes>
     </Router>

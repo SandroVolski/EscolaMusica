@@ -1,6 +1,6 @@
 body {
     font-family: 'Arial', sans-serif;
-    margin: 10px !important;
+    
 }
 
 .register-container {
@@ -18,7 +18,7 @@ body {
     color: #101728;
     text-align: start;
     margin-bottom: 20px;
-    margin-top: 60% !important; /*MUDAR ISSO AQUI */
+    margin-top: 40% !important; /*MUDAR ISSO AQUI */
 }
 
 .form-label {
@@ -173,4 +173,40 @@ body {
     border-radius: 5px;
     cursor: pointer;
 }
+
+.search-bar-classes {
+    background-color: #fff;
+    width: calc(100% - 36px); /* Ajusta a largura para não ocupar 100vw */
+    box-sizing: border-box; /* Inclui padding e borda no cálculo do width */
+    margin-bottom: 20px; /* Espaçamento inferior para separar de outros elementos */
+    margin-top: 20px; /* Espaçamento superior para a barra aparecer logo abaixo do topo */
+    margin-left: 18px; /* Margem esquerda */
+    height: 100px; /* Altura da barra de busca */
+}
+
+.search-bar-classes input {
+    font-family: 'CodecPro', sans-serif;
+    flex-grow: 1;
+    border: 3px solid #101728;
+    border-radius: 100%;
+    padding: 10px 20px;
+    font-size: 20px !important;
+    color: #000000;
+    padding-left: 55px;
+}
+
+.search-bar-classes input::placeholder {
+    color: rgba(16, 23, 40, 0.3);
+    position: relative;
+    font-family: 'CodecProExtraBold', sans-serif;
+}
+
+.search-icon-classes {
+    position: relative;
+    top: -43px;
+    left: 15px;
+    color: #101728;
+    font-size: 25px;
+}
+
 

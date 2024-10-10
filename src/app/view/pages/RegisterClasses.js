@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import Select from 'react-select';
-import './RegisterStudent.css';
+import './RegisterClasses.css';
 import Header from '../../components/Header';
 import Sidebar from '../../components/Sidebar';
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -8,9 +8,10 @@ import TimePicker from 'react-time-picker'; // Biblioteca para o relógio
 import HorarioAulaInput from '../../components/HorarioAulaInput';
 import PhotoUpload from '../../components/PhotoUpload';
 import { AiFillPicture } from 'react-icons/ai';
+import { FaSearch } from "react-icons/fa";
 
 
-const RegisterStudent = () => {
+const RegisterClasses = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
@@ -141,7 +142,7 @@ const RegisterStudent = () => {
 
             <div className="container mt-4 register-container">
                 <form className="student-form" onSubmit={handleFormSubmit}>
-                    <h2 className="title-text">Novo Aluno!</h2>
+                    <h2 className="title-text">Nova Turma!</h2>
 
                     <div className="mb-3 font-test">
                         <label className="form-label" htmlFor="name">Nome</label>
@@ -150,7 +151,7 @@ const RegisterStudent = () => {
                             id="name"
                             name="name"
                             type="text"
-                            placeholder="Nome do Aluno"
+                            placeholder="Nome da Turma"
                             value={formData.name}
                             onChange={handleInputChange}
                         />
@@ -181,23 +182,10 @@ const RegisterStudent = () => {
                     </div>
 
                     <div className="row">
-                        <div className="col-6 mb-3">
-                            <label className="form-label">Modalidade</label>
-                            <Select
-                            className={`font-test font-test ${errors.valor ? 'is-invalid' : ''}`}
-                                options={options}
-                                classNamePrefix="custom-select"
-                                value={options.find(option => option.value === formData.modalidade)}
-                                onChange={(selectedOption) => handleInputChange({ target: { name: 'modalidade', value: selectedOption.value } })}
-                                placeholder="Selecionar"
-                            />
-                            {errors.modalidade && <div className="invalid-feedback">{errors.modalidade}</div>}
-                        </div>
-
-                        <div className="col-6 mb-3">
+                        <div className="col-4 mb-3">  {/* Ajuste aqui para col-4 */}
                             <label className="form-label">Tempo</label>
                             <Select
-                                className={`font-test font-test ${errors.valor ? 'is-invalid' : ''}`}
+                                className={`font-test ${errors.tempo ? 'is-invalid' : ''}`}
                                 options={tempoOptions}
                                 classNamePrefix="custom-select"
                                 value={tempoOptions.find(option => option.value === formData.tempo)}
@@ -206,59 +194,11 @@ const RegisterStudent = () => {
                             />
                             {errors.tempo && <div className="invalid-feedback">{errors.tempo}</div>}
                         </div>
-                    </div>
 
-                    <div className="row">
-                        <div className="col-6 mb-3 font-test">
-                            <label className="form-label">Vence Dia</label>
-                            <input
-                                className={`font-test form-control ${errors.venceDia ? 'is-invalid' : ''}`}
-                                name="venceDia"
-                                type="number"
-                                max="31"
-                                min="1"
-                                placeholder="Selecionar"
-                                value={formData.venceDia}
-                                onChange={(e) => {
-                                    const value = e.target.value;
-                                    // Limita o valor a no máximo 31 e garante que tenha no máximo 2 dígitos
-                                    if (value.length <= 2 && (value === '' || (Number(value) >= 1 && Number(value) <= 31))) {
-                                        handleInputChange(e);
-                                    }
-                                }}
-                                onKeyDown={(e) => {
-                                    // Evita que o usuário insira caracteres inválidos, como o 'e' ou 'E'
-                                    if (['e', 'E', '+', '-'].includes(e.key)) {
-                                        e.preventDefault();
-                                    }
-                                }}
-                            />
-                            {errors.venceDia && <div className="invalid-feedback">{errors.venceDia}</div>}
-                        </div>
-
-
-                        <div className="col-6 mb-3">
-                            <label className="form-label">Valor</label>
-                            <div className="input-group font-test">
-                                <span className="input-group-text">R$</span>
-                                <input
-                                    className={`font-test form-control ${errors.valor ? 'is-invalid' : ''}`}
-                                    name="valor"
-                                    type="number"
-                                    placeholder="0,00" // O que aparece quando o campo está vazio
-                                    value={formData.valor}
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                            {errors.valor && <div className="invalid-feedback">{errors.valor}</div>}
-                        </div>
-                    </div>
-
-                    <div className="row">
-                        <div className="col-6 mb-3">
+                        <div className="col-4 mb-3">  {/* Ajuste aqui para col-4 */}
                             <label className="form-label">Dia da Aula</label>
                             <Select
-                                className={`font-test font-test ${errors.valor ? 'is-invalid' : ''}`}
+                                className={`font-test ${errors.diaAula ? 'is-invalid' : ''}`}
                                 options={diasOptions}
                                 classNamePrefix="custom-select"
                                 value={diasOptions.find(option => option.value === formData.diaAula)}
@@ -272,10 +212,12 @@ const RegisterStudent = () => {
                             errors={errors} 
                             formData={formData} 
                             setFormData={setFormData} 
-                            colClass="col-6" 
-                            placeholder="Digite um horário" 
-                            label="Horário da Aula" 
+                            colClass="col-4" 
+                            placeholder="Digite" 
+                            label="Horário" 
                         />
+
+
                     </div>
 
                     <div className="photo-container">
@@ -297,11 +239,17 @@ const RegisterStudent = () => {
                                 ) : (
                                     <div onClick={handlePhotoClick}>
                                         <AiFillPicture style={{ fontSize: '300%' }} />
-                                        <p>Adicione uma foto do aluno</p>
+                                        <p>Adicione uma foto da Turma</p>
                                     </div>
                                 )}
                             </div>
                         )}
+                    </div>
+                    
+                    <div className="search-bar-classes">
+                        <label className="form-label">Integrantes</label>
+                        <input type="text" placeholder="Nome do Aluno" />
+                        <FaSearch className="search-icon-classes" />
                     </div>
 
                     <button className="btn w-100" type="submit">Cadastrar</button>
@@ -311,4 +259,4 @@ const RegisterStudent = () => {
     );
 };
 
-export default RegisterStudent;
+export default RegisterClasses;

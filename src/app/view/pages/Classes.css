@@ -1,0 +1,274 @@
+.search-bar {
+    position: fixed;
+    top: 0px;
+    right: 1px;
+    padding: 20px 20px;
+    background-color: #fff;
+    z-index: 100;
+    width: 100vw; /* Garante que a barra ocupe 100% da largura da tela */
+    box-sizing: border-box; /* Inclui padding e borda no cálculo do width */
+    margin-bottom: 20px;
+    margin-top: 80px;
+    margin-left: 18px;
+    height: 100px;
+  }
+    
+  .search-bar input {
+    font-family: 'CodecPro', sans-serif;
+    flex-grow: 1;
+    border: 3px solid #101728;
+    border-radius: 100%;
+    padding: 10px 20px;
+    font-size: 20px !important;
+    color: #000000;
+    padding-left: 55px;
+  }
+    
+  .search-bar input::placeholder {
+    color: rgba(16, 23, 40, 0.3);
+    position: relative;
+    font-family: 'CodecProExtraBold', sans-serif;
+  }
+    
+  .search-icon {
+    position: relative;
+    top: -43px;
+    left: 15px;
+    color: #101728;
+    font-size: 25px;
+  }
+    
+    /* Conteúdo abaixo da barra de pesquisa */
+  .content-container {
+    padding-top: 0px; /* Espaço flexível para ajustar ao header ou barra de pesquisa */
+    padding-left: 20px;
+    padding-right: 20px;
+    height: 121vh; /* A altura será 100% da altura da tela */
+    min-height: calc(100vh - 100px); /* Garante que o conteúdo ocupe a tela inteira */
+    overflow-y: auto; /* Permite rolar o conteúdo */
+    margin-bottom: 200px;
+  }
+  
+  .row {
+    margin-top: 0; /* Remove o espaço superior para que os itens fiquem no topo */
+    flex-grow: 1; /* Permite que a .row cresça para preencher o espaço restante */
+  }
+  
+  .profile-img {
+    border: 1px solid black; /* Borda preta de 1px */
+    margin-bottom: 31px;
+  }
+  
+  .profile-container {
+    position: relative; /* Necessário para o posicionamento absoluto do status */
+    display: inline-block;
+  }
+  
+    /* Cartões de alunos */
+  .aluno-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+    padding: 20px;
+    padding-bottom: 10px !important;
+    transition: transform 0.2s;
+  }
+    
+  .aluno-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .card-title {
+    font-size: 25px;
+    font-family: 'CodecProExtraBold', sans-serif;
+    margin: 0;
+  }
+  
+  .full-width-name {
+    text-align: center;
+    margin-bottom: 10px;
+    
+  }
+
+  .data-horario-container {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .full-width-name .card-title {
+    margin: 0;
+    
+  }
+  
+  .icon-text-first,
+  .icon-text-second {
+    display: flex;
+    align-items: center;
+  }
+  
+  .icon-text-first span,
+  .icon-text-second span {
+    margin-left: 5px;
+  }
+  
+.icon-text-instrument{
+    font-family: 'CodecProExtraBold', sans-serif;
+    color: #48cfae;
+    align-items: center;
+    font-size: 20px;
+    
+}
+
+.icon-text-money{
+    color: #26ad00;
+} 
+  
+.iconsMenu{
+    margin-right: 5px
+}
+  
+    /* Texto dentro do cartão  AQUII*/
+.card-text {
+    font-family: 'CodecPro', sans-serif;
+    font-size: 20px;
+    color: #101728;
+}
+
+.second-column{
+    margin-top: -25px !important;
+}
+
+/* Botão de adicionar fixo no centro inferior */
+.button-wrapper {
+    position: fixed;
+    bottom: 1px; /* Ajuste a posição do fundo */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999; /* Garante que o botão e o fundo fiquem acima do conteúdo */
+    display: flex; /* Flexbox para centralizar o botão */
+    justify-content: center; /* Centraliza o botão no meio */
+    width: 100%; /* Ocupa toda a largura da tela */
+    height: 80px;
+}
+
+.button-wrapper::before {
+    content: '';
+    position: absolute;
+    width: 100vw; /* Ocupa toda a largura da viewport */
+    height: 100px; /* Altura do retângulo branco */
+    background-color: white; /* Fundo branco */
+    z-index: -1; /* Para o fundo branco ficar atrás do botão */
+    top: 0; /* Posiciona o retângulo no topo da button-wrapper */
+    left: 0; /* Alinha à esquerda */
+    border-radius: 12px; /* Ajuste de bordas arredondadas */
+    
+}
+
+.add-button {
+    top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+    background-color: #101728;
+    color: white;
+    border-radius: 50%;
+    position: relative; /* Relativo à div pai (button-wrapper) */
+    cursor: pointer;
+    font-size: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+.add-button:hover {
+    transform: scale(1.05);  /* Aumenta levemente ao passar o mouse */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);  /* Aumenta a sombra ao passar o mouse */
+}
+
+/* Alinhamento dos alunos em duas colunas */
+.alunos-list-container {
+    height: auto;
+    max-height: 150px; /* Altura máxima da lista antes de habilitar o rolamento */
+    overflow-y: auto;  /* Rolamento vertical */
+    margin-top: 10px;
+  }
+  
+  .alunos-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;  /* Duas colunas */
+    gap: 15px;  /* Espaço entre os itens */
+    margin-left: 12px;
+  }
+  
+  /* Estilos para cada aluno */
+  .aluno-status {
+    display: flex;
+    align-items: center;
+  }
+  
+  .status-circle {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin-right: 8px;
+    
+  }
+  
+  .aluno-nome {
+    font-size: 18px;
+    font-family: 'CodecPro', sans-serif;
+    color: #101728;
+
+  }
+  
+
+  .bg-success {
+    background-color: #26ad00;
+  }
+  
+  .bg-warning {
+    background-color: #ffcc00;
+  }
+  
+  .bg-danger {
+    background-color: #ff4444;
+  }
+
+  .aluno-card {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+
+/* Responsividade para telas grandes */
+@media (min-width: 992px) {
+    .content-container .row {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .content-container .col-lg-4 {
+        flex: 1;
+        max-width: 33.3333%;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .content-container .col-md-6 {
+        flex: 1;
+        max-width: 50%;
+        
+    }
+}
+
+@media (max-width: 767.98px) {
+    .content-container .col-12 {
+        flex: 1;
+        max-width: 100%;
+        
+    }
+}
+    
