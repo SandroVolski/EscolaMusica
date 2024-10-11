@@ -1,0 +1,138 @@
+.pag-all-receipt{
+    margin: 15px !important;
+    margin-bottom: 35% !important;
+}
+
+.title-text-receipt{ 
+    font-family: 'CodecProExtraBold', sans-serif;
+    font-size: 32px !important;
+    color: #101728;
+    text-align: start;
+    margin-bottom: 20px;
+    margin-top: 65% !important; /*MUDAR ISSO AQUI */
+}
+
+.search-bar-classes-receipt {
+    background-color: #fff;
+    width: 100%;
+    box-sizing: border-box; /* Inclui padding e borda no cálculo do width */
+    
+    margin-top: 30px; /* Espaçamento superior para a barra aparecer logo abaixo do topo */
+    
+    height: 100px; /* Altura da barra de busca */
+}
+
+.search-bar-classes-receipt input {
+    font-family: 'CodecPro', sans-serif;
+    flex-grow: 1;
+    border: 3px solid #101728;
+    border-radius: 100%;
+    padding: 10px 20px;
+    font-size: 20px !important;
+    color: #000000;
+    padding-left: 55px;
+}
+
+.search-bar-classes-receipt input::placeholder {
+    color: rgba(16, 23, 40, 0.3);
+    position: relative;
+    font-family: 'CodecProExtraBold', sans-serif;
+}
+
+/* Contêiner fixo para o fundo dos botões */
+.fixed-footer-background {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 125px; /* Ajuste a altura conforme necessário */
+    background-color: #ffffff; /* Cor de fundo branca */
+    z-index: 99; /* Certifique-se de que o fundo esteja atrás dos botões */
+}
+
+/* Estilo para o botão de recebimento */
+.btn-receipt {
+    width: 100%;
+    padding: 10px;
+    background-color: #101728 !important;
+    color: #ffffff !important;
+    font-size: 20px !important;
+    font-weight: 500;
+    border-radius: 5px;
+    position: fixed;
+    bottom: 60px; /* Distância do rodapé para o botão de recebimento */
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    max-width: 400px;
+    z-index: 100; /* Certifique-se de que o botão esteja à frente do fundo */
+}
+
+/* Estilo para o botão de cancelamento */
+.btn-cancell {
+    width: 60% !important;
+    padding: 10px;
+    background-color: #ff3e60 !important;
+    color: #ffffff !important;
+    font-size: 20px !important;
+    font-weight: 500;
+    border-radius: 5px;
+    position: fixed;
+    bottom: 0;
+    left: 20%;
+    right: 20%;
+    margin: 0 auto;
+    max-width: 400px;
+    border-color: #ffffff;
+    z-index: 100; /* Certifique-se de que o botão esteja à frente do fundo */
+}
+
+
+  .qrcode {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .qrcode img {
+    width: 220px; /* Define a largura desejada */
+  }
+
+  .price-input-wrapper {
+    font-family: 'CodecProExtraBold', sans-serif;
+    font-size: 32px !important;
+    color: #101728;
+
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid #101728; /* Linha abaixo do campo */
+    padding-bottom: 10px;
+    
+    
+}
+
+.price-prefix {
+    font-size: 32px !important;
+    font-weight: bold;
+    margin-right: 10px;
+    color: #000; /* Cor do "R$" */
+}
+
+.price-input {
+    border: none;
+    outline: none;
+    font-size: 32px !important;
+    font-weight: bold;
+    width: 100%;
+    text-align: left;
+    padding: 0;
+    color: #000; /* Cor do texto */
+}
+
+.price-input::placeholder {
+    color: #000;
+    opacity: 0.5;
+}
+
+.price-input-wrapper:focus-within {
+    border-color: #000;
+}

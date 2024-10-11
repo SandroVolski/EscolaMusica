@@ -141,7 +141,7 @@ const RegisterClasses = () => {
             <Sidebar isOpen={menuOpen} toggleMenu={toggleMenu} />
 
             <div className="container mt-4 register-container">
-                <form className="student-form" onSubmit={handleFormSubmit}>
+                <form className="student-form-classes" onSubmit={handleFormSubmit}>
                     <h2 className="title-text">Nova Turma!</h2>
 
                     <div className="mb-3 font-test">

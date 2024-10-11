@@ -276,6 +276,7 @@ const RegisterStudent = () => {
                             placeholder="Digite um horário" 
                             label="Horário da Aula" 
                         />
+                        
                     </div>
 
                     <div className="photo-container">
