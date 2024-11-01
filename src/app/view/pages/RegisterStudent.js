@@ -8,7 +8,12 @@ import TimePicker from 'react-time-picker'; // Biblioteca para o relógio
 import HorarioAulaInput from '../../components/HorarioAulaInput';
 import PhotoUpload from '../../components/PhotoUpload';
 import { AiFillPicture } from 'react-icons/ai';
-
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '../../../firebaseConfig'; // Ajuste o caminho conforme a localização do arquivo firebaseConfig.js
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterStudent = () => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -23,7 +28,12 @@ const RegisterStudent = () => {
         horarioAula: ""
     });
     const [errors, setErrors] = useState({});
-    
+    const [image, setImage] = useState(null); // Estado para armazenar a imagem
+    const [photo, setPhoto] = useState(null); // Estado para armazenar a foto capturada
+    const [showCamera, setShowCamera] = useState(false); // Estado para controlar se a câmera está ativa
+    const videoRef = useRef(null); // Referência para o elemento de vídeo
+    const canvasRef = useRef(null); // Referência para o canvas onde a foto será desenhada
+    const navigate = useNavigate();
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
@@ -46,7 +56,7 @@ const RegisterStudent = () => {
         }));
     };
 
-    const handleFormSubmit = (e) => {
+    const handleFormSubmit = async (e) => {
         e.preventDefault();
 
         const newErrors = {};
@@ -60,28 +70,50 @@ const RegisterStudent = () => {
 
         setErrors(newErrors);
 
-        if (Object.keys(newErrors).length === 0) {
-            console.log("Formulário enviado", formData);
+        if (Object.keys(newErrors).length === 0 && photo) {
+            try {
+                const storage = getStorage(); // Instanciar o Firebase Storage
+                const storageRef = ref(storage, `students/${formData.name}-${Date.now()}.png`); // Criar referência no Storage
+
+                // Converter dataURL (base64) para Blob para enviar ao Storage
+                const response = await fetch(photo);
+                const blob = await response.blob();
+
+                // 1. Upload da imagem para o Firebase Storage
+                await uploadBytes(storageRef, blob);
+
+                // 2. Pegar o URL da imagem
+                const imageUrl = await getDownloadURL(storageRef);
+
+                // 3. Salvar os dados no Firestore com o URL da imagem
+                await addDoc(collection(db, "students"), {
+                    name: formData.name,
+                    instrument: formData.instrumentos,
+                    type: formData.modalidade,
+                    time: formData.tempo,
+                    day: formData.diaAula,
+                    hour: formData.horarioAula,
+                    value: formData.valor,
+                    img: imageUrl // Salvar o URL da imagem
+                });
+
+                toast.success('Dados salvos com sucesso!', { position: 'top-center' });
+                setTimeout(() => navigate('/students'), 3000); // Redirecionar após 3 segundos
+
+            } catch (error) {
+                console.error("Erro ao salvar os dados: ", error);
+                toast.error('Erro ao salvar os dados, tente novamente.');
+            }
+        } else {
+            toast.error('Por favor, tire uma foto.');
         }
     };
 
-    const handleSelectChange = (selectedOption) => {
-        setFormData({ ...formData, tempo: selectedOption.value });
-    };
-
-    {/* CAMERA */}
-
-    const [photo, setPhoto] = useState(null); // Estado para armazenar a foto capturada
-    const [showCamera, setShowCamera] = useState(false); // Estado para controlar se a câmera está ativa
-    const videoRef = useRef(null); // Referência para o elemento de vídeo
-    const canvasRef = useRef(null); // Referência para o canvas onde a foto será desenhada
-
     const handlePhotoClick = () => {
-        // Abrir a câmera ao clicar
         setShowCamera(true);
         navigator.mediaDevices.getUserMedia({ video: true })
             .then((stream) => {
-                videoRef.current.srcObject = stream; // Definir o vídeo para exibir o stream da câmera
+                videoRef.current.srcObject = stream;
             })
             .catch((error) => {
                 console.error('Erro ao acessar a câmera: ', error);
@@ -113,6 +145,10 @@ const RegisterStudent = () => {
         setShowCamera(false);
     };
 
+    const handleSelectChange = (selectedOption) => {
+        setFormData({ ...formData, tempo: selectedOption.value });
+    };
+
     const options = [
         { value: 'Individual', label: 'Individual' },
         { value: 'Turma', label: 'Turma' },
@@ -120,11 +156,11 @@ const RegisterStudent = () => {
     ];
 
     const diasOptions = [
-        { value: 'Segunda-feira', label: 'Segunda-feira' },
-        { value: 'Terça-feira', label: 'Terça-feira' },
-        { value: 'Quarta-feira', label: 'Quarta-feira' },
-        { value: 'Quinta-feira', label: 'Quinta-feira' },
-        { value: 'Sexta-feira', label: 'Sexta-feira' },
+        { value: 'Segunda', label: 'Segunda-feira' },
+        { value: 'Terça', label: 'Terça-feira' },
+        { value: 'Quarta', label: 'Quarta-feira' },
+        { value: 'Quinta', label: 'Quinta-feira' },
+        { value: 'Sexta', label: 'Sexta-feira' },
         { value: 'Sábado', label: 'Sábado' },
         { value: 'Domingo', label: 'Domingo' }
     ];
@@ -138,8 +174,9 @@ const RegisterStudent = () => {
         <>
             <Header toggleMenu={toggleMenu} />
             <Sidebar isOpen={menuOpen} toggleMenu={toggleMenu} />
+            <ToastContainer position="top-center" />
 
-            <div className="container mt-4 register-container">
+            <div className="container mt-4 register-container-student">
                 <form className="student-form" onSubmit={handleFormSubmit}>
                     <h2 className="title-text">Novo Aluno!</h2>
 
@@ -160,7 +197,7 @@ const RegisterStudent = () => {
                     <div className="mb-3">
                         <label className="form-label">Instrumentos</label>
                         <div className="row">
-                            {["violao", "violino", "guitarra", "teclado", "bateria", "baixo", "canto", "acordeon", "viola", "ukelele", "saxofone", "outro"].map((instrumento, index) => (
+                            {["Violão", "Violino", "Guitarra", "Teclado", "Bateria", "Baixo", "Canto", "Acordeon", "Viola", "Ukelele", "Saxofone", "Outro"].map((instrumento, index) => (
                                 <div className="col-4 col-md-3 col-lg-2 mb-3" key={index}>
                                     <div className="form-check font-test    ">
                                         <input

@@ -3,6 +3,40 @@
     margin-bottom: 35% !important;
 }
 
+.search-results {
+    
+    top: 0;
+    z-index: 10;
+    background-color: #f9f9f9; /* Alteração para um fundo mais suave */
+    padding: 700px; /* Reduz o padding para menor distância interna */
+    margin-bottom: 15px; /* Pequeno espaço abaixo dos resultados */
+    border-bottom: 1px solid #ddd; /* Linha para diferenciar do conteúdo principal */
+}
+
+.aluno-card-receipt {
+    margin-bottom: 10px; /* Reduz o espaçamento entre os cards */
+    padding: 15px; /* Ajuste para reduzir o padding interno do card */
+    background-color: #fff; /* Cor de fundo do card */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra suave para destacá-los */
+    border-radius: 8px; /* Cantos levemente arredondados */
+}
+
+/* Remove espaçamentos extras dentro dos cards */
+.aluno-card-receipt .icon-text {
+    margin-bottom: 5px; /* Menor espaço entre os ícones e textos */
+}
+
+/* Imagem de perfil */
+.profile-container-receipt {
+    margin-right: 10px; /* Menor espaçamento entre a imagem e o texto */
+}
+
+/* CSS para o conteúdo principal que deve ficar abaixo */
+.content-container {
+    padding-top: 20px; /* Adiciona espaçamento para que os elementos abaixo não fiquem colados */
+}
+
+
 .title-text-receipt{ 
     font-family: 'CodecProExtraBold', sans-serif;
     font-size: 32px !important;

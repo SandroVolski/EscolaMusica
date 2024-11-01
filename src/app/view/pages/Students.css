@@ -40,7 +40,7 @@
   
   /* Conteúdo abaixo da barra de pesquisa */
 .content-container {
-  padding-top: 0px; /* Espaço flexível para ajustar ao header ou barra de pesquisa */
+  padding-top: 20px; /* Espaço flexível para ajustar ao header ou barra de pesquisa */
   padding-left: 20px;
   padding-right: 20px;
   height: 121vh; /* A altura será 100% da altura da tela */

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Select from 'react-select';
 import './RegisterClasses.css';
 import Header from '../../components/Header';
@@ -8,8 +8,13 @@ import TimePicker from 'react-time-picker'; // Biblioteca para o relógio
 import HorarioAulaInput from '../../components/HorarioAulaInput';
 import PhotoUpload from '../../components/PhotoUpload';
 import { AiFillPicture } from 'react-icons/ai';
-import { FaSearch } from "react-icons/fa";
-
+import { FaSearch, FaPlus } from "react-icons/fa";
+import { collection, query, where, getDocs, doc, setDoc, getFirestore } from 'firebase/firestore'; 
+import { db } from '../../../firebaseConfig'; // Ajuste o caminho conforme a localização do arquivo firebaseConfig.js
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterClasses = () => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -24,7 +29,17 @@ const RegisterClasses = () => {
         horarioAula: ""
     });
     const [errors, setErrors] = useState({});
+    const [photo, setPhoto] = useState(null); // Estado para armazenar a foto capturada
+    const [showCamera, setShowCamera] = useState(false); // Estado para controlar se a câmera está ativa
+    const videoRef = useRef(null); // Referência para o elemento de vídeo
+    const canvasRef = useRef(null); // Referência para o canvas onde a foto será desenhada
+    const [searchTerm, setSearchTerm] = useState('');
+    const [students, setStudents] = useState([]);
+    const [selectedStudents, setSelectedStudents] = useState([]);
+    const navigate = useNavigate();
     
+    // Inicializa o Firestore
+    const db = getFirestore();
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
@@ -47,23 +62,83 @@ const RegisterClasses = () => {
         }));
     };
 
-    const handleFormSubmit = (e) => {
+    const handleFormSubmit = async (e) => {
         e.preventDefault();
-
+    
         const newErrors = {};
+        // Validações
         if (!formData.name) newErrors.name = "Nome é obrigatório.";
-        if (!formData.modalidade) newErrors.modalidade = "Modalidade é obrigatória.";
         if (!formData.tempo) newErrors.tempo = "Tempo é obrigatório.";
-        if (!formData.venceDia) newErrors.venceDia = "Vencimento é obrigatório.";
-        if (!formData.valor) newErrors.valor = "Valor é obrigatório.";
         if (!formData.diaAula) newErrors.diaAula = "Dia da aula é obrigatório.";
         if (!formData.horarioAula) newErrors.horarioAula = "Horário é obrigatório.";
-
+    
         setErrors(newErrors);
-
-        if (Object.keys(newErrors).length === 0) {
-            console.log("Formulário enviado", formData);
+    
+        // Se houver erros, não prosseguir
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
         }
+    
+        try {
+            let photoURL = '';
+    
+            // Fazer upload da foto no Firebase Storage, se existir
+            if (photo) {
+                const storage = getStorage();
+                const storageRef = ref(storage, `classes/${formData.name}-${Date.now()}.png`);
+                const blob = dataURLtoBlob(photo); // Converte a imagem de dataURL para Blob
+                await uploadBytes(storageRef, blob);
+                photoURL = await getDownloadURL(storageRef);
+            }
+    
+            // Prepara os dados da turma
+            const classData = {
+                className: formData.name,
+                day: formData.diaAula,
+                time: formData.horarioAula,
+                img: photoURL,
+                instrument: formData.instrumentos,
+                students: selectedStudents.map(student => student.id), // IDs dos alunos
+            };
+    
+            console.log("Dados da turma a serem enviados:", classData);
+    
+            // Salvar a turma no Firestore
+            const classRef = doc(collection(db, 'classes')); // Cria uma referência para um novo documento
+            await setDoc(classRef, classData); // Usa a referência para salvar os dados
+            
+            toast.success("Turma cadastrada com sucesso!", { position: 'top-center' });
+            setTimeout(() => navigate('/classes'), 3000);
+    
+            // Limpa o formulário após o sucesso
+            setFormData({
+                name: "",
+                instrumentos: [],
+                modalidade: "",
+                tempo: "",
+                diaAula: "",
+                horarioAula: ""
+            });
+            setSelectedStudents([]);
+            setPhoto(null);
+        } catch (error) {
+            console.error("Erro ao cadastrar a turma:", error);
+            toast.error("Erro ao cadastrar a turma.");
+        }
+    
+        console.log("Formulário enviado", formData);
+    };
+
+    const dataURLtoBlob = (dataURL) => {
+        const byteString = atob(dataURL.split(',')[1]);
+        const mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+        return new Blob([ab], { type: mimeString });
     };
 
     const handleSelectChange = (selectedOption) => {
@@ -72,17 +147,11 @@ const RegisterClasses = () => {
 
     {/* CAMERA */}
 
-    const [photo, setPhoto] = useState(null); // Estado para armazenar a foto capturada
-    const [showCamera, setShowCamera] = useState(false); // Estado para controlar se a câmera está ativa
-    const videoRef = useRef(null); // Referência para o elemento de vídeo
-    const canvasRef = useRef(null); // Referência para o canvas onde a foto será desenhada
-
     const handlePhotoClick = () => {
-        // Abrir a câmera ao clicar
         setShowCamera(true);
         navigator.mediaDevices.getUserMedia({ video: true })
             .then((stream) => {
-                videoRef.current.srcObject = stream; // Definir o vídeo para exibir o stream da câmera
+                videoRef.current.srcObject = stream; // Define o vídeo para exibir o stream da câmera
             })
             .catch((error) => {
                 console.error('Erro ao acessar a câmera: ', error);
@@ -121,11 +190,11 @@ const RegisterClasses = () => {
     ];
 
     const diasOptions = [
-        { value: 'Segunda-feira', label: 'Segunda-feira' },
-        { value: 'Terça-feira', label: 'Terça-feira' },
-        { value: 'Quarta-feira', label: 'Quarta-feira' },
-        { value: 'Quinta-feira', label: 'Quinta-feira' },
-        { value: 'Sexta-feira', label: 'Sexta-feira' },
+        { value: 'Segunda', label: 'Segunda-feira' },
+        { value: 'Terça', label: 'Terça-feira' },
+        { value: 'Quarta', label: 'Quarta-feira' },
+        { value: 'Quinta', label: 'Quinta-feira' },
+        { value: 'Sexta', label: 'Sexta-feira' },
         { value: 'Sábado', label: 'Sábado' },
         { value: 'Domingo', label: 'Domingo' }
     ];
@@ -135,12 +204,69 @@ const RegisterClasses = () => {
         { value: '30 Min', label: '30 Min' }
     ];
 
+    // Função para buscar alunos com base no nome
+    const searchStudents = async (term) => {
+        if (term === '') {
+            setStudents([]); // Limpa a lista se o campo de pesquisa estiver vazio
+            return;
+        }
+
+        try {
+            // Cria uma consulta para buscar os alunos
+            const q = query(
+                collection(db, 'students'),
+                where('name', '>=', term),
+                where('name', '<=', term + '\uf8ff')
+            );
+
+            const snapshot = await getDocs(q);
+            const results = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setStudents(results);
+        } catch (error) {
+            console.error("Erro ao buscar alunos:", error);
+        }
+    };
+
+    // Use useEffect para chamar a função de busca quando o termo de pesquisa mudar
+    useEffect(() => {
+        const fetchStudents = async () => {
+            try {
+                const querySnapshot = await getDocs(collection(db, "students"));
+                const studentsData = querySnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                setStudents(studentsData);
+            } catch (error) {
+                console.error("Erro ao buscar dados:", error);
+            }
+        };
+        fetchStudents();
+    }, []);
+
+    // Filtra os alunos com base no termo de pesquisa
+    const filteredStudents = students.filter(student =>
+        student.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const handleSelectStudent = (student) => {
+        if (!selectedStudents.some(selected => selected.id === student.id)) {
+            setSelectedStudents([...selectedStudents, student]);
+        }
+    };
+
+    // Remove o aluno da lista de selecionados
+    const handleRemoveStudent = (id) => {
+        setSelectedStudents(selectedStudents.filter(student => student.id !== id));
+    };
+
     return (
         <>
             <Header toggleMenu={toggleMenu} />
             <Sidebar isOpen={menuOpen} toggleMenu={toggleMenu} />
-
-            <div className="container mt-4 register-container">
+            <ToastContainer />
+            
+            <div className="container mt-4 register-container-classes classes-test">
                 <form className="student-form-classes" onSubmit={handleFormSubmit}>
                     <h2 className="title-text">Nova Turma!</h2>
 
@@ -243,16 +369,78 @@ const RegisterClasses = () => {
                                     </div>
                                 )}
                             </div>
-                        )}
+                        )}  
                     </div>
                     
                     <div className="search-bar-classes">
                         <label className="form-label">Integrantes</label>
-                        <input type="text" placeholder="Nome do Aluno" />
+                        <input 
+                            type="text" 
+                            placeholder="Nome do Aluno" 
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
                         <FaSearch className="search-icon-classes" />
+
+                        {/* Renderiza os resultados da pesquisa em cards apenas se houver busca */}
+                        {searchTerm && (
+                            <div className="search-results">
+                                {filteredStudents.map(student => (
+                                    <div 
+                                        className="card aluno-card-class" 
+                                        key={student.id} 
+                                        onClick={() => handleSelectStudent(student)}
+                                    >
+                                        <div className="full-width-name">
+                                            <h5 className="card-title-classes">{student.name}</h5>
+                                        </div>
+                                        <div className="profile-container">
+                                            <img
+                                                alt={`Profile image of ${student.name}`}
+                                                className="rounded-circle profile-img"
+                                                src={student.img}
+                                                width="80"
+                                                height="80"
+                                            />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+
+                        {/* Renderiza a lista de alunos selecionados */}
+                        <h3 style={{fontSize:"19px", marginTop:"10px", marginBottom:"20px"}}>Alunos Selecionados:</h3>
+                        <div className="selected-students">
+                            {selectedStudents.map(student => (
+                                <div className="card aluno-card-class selected" key={student.id}>
+                                    <div className="full-width-name">
+                                        <h5 className="card-title-classes">{student.name}</h5>
+                                    </div>
+                                    <div className="profile-container">
+                                        <img
+                                            alt={`Profile image of ${student.name}`}
+                                            className="rounded-circle profile-img"
+                                            src={student.img}
+                                            width="80"
+                                            height="80"
+                                        />
+                                    </div>
+                                    <button 
+                                        className="remove-button" 
+                                        onClick={() => handleRemoveStudent(student.id)}
+                                    >
+                                        Remover
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
                     </div>
 
-                    <button className="btn w-100" type="submit">Cadastrar</button>
+                    <div className="fixed-footer-background-classes"></div>
+                    <div className="button-container">
+                        <button className="btn-receipt-classes" type="submit">Cadastrar</button>
+                    </div>
                 </form>
             </div>
         </>

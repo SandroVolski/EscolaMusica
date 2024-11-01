@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Select from 'react-select';
 import './Receipt.css';
 import Header from '../../components/Header';
@@ -8,8 +8,10 @@ import TimePicker from 'react-time-picker'; // Biblioteca para o relógio
 import HorarioAulaInput from '../../components/HorarioAulaInput';
 import PhotoUpload from '../../components/PhotoUpload';
 import { AiFillPicture } from 'react-icons/ai';
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaCalendarAlt, FaClock, FaMusic, FaDollarSign, FaUsers } from "react-icons/fa";
 import qrcode from '../../assets/imgs/qrcodeGoogle.png';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../../firebaseConfig';
 
 const Receipt = () => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -53,6 +55,46 @@ const Receipt = () => {
         setFormData({ ...formData, price: value });
     };
 
+    const [searchTerm, setSearchTerm] = useState('');
+    const [students, setStudents] = useState([]);
+    const [filteredStudents, setFilteredStudents] = useState([]);
+    const [selectedStudent, setSelectedStudent] = useState(null);
+
+    useEffect(() => {
+        const fetchStudents = async () => {
+            try {
+                const studentsCollection = collection(db, 'students');
+                const studentsSnapshot = await getDocs(studentsCollection);
+                const studentsList = studentsSnapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                setStudents(studentsList);
+            } catch (error) {
+                console.error('Erro ao buscar os alunos: ', error);
+            }
+        };
+
+        fetchStudents();
+    }, []);
+
+    useEffect(() => {
+        setFilteredStudents(
+            students.filter(student => 
+                student.name.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+        );
+    }, [searchTerm, students]);
+
+    const handleSelectStudent = (student) => {
+        setSelectedStudent(student);
+        setSearchTerm(''); // Limpa o campo de busca
+    };
+
+    const handleRemoveStudent = () => {
+        setSelectedStudent(null); // Remove o aluno selecionado
+    };
+
     return (
         <>
         <div className="pag-all-receipt">
@@ -74,15 +116,141 @@ const Receipt = () => {
                 />
             </div>
 
-            <div className="search-bar-classes-receipt">
-                <label className="form-label">Aluno</label> 
-                <input type="text" placeholder="Nome do Aluno" />
-                <FaSearch className="search-icon-classes" />
+            <div className="receipt-container">
+                <div className="search-bar-classes-receipt">
+                    <label className="form-label">Aluno</label>
+                    <input 
+                        type="text" 
+                        placeholder="Nome do Aluno" 
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    <FaSearch className="search-icon-classes" />
+
+                    {/* Renderiza os resultados da pesquisa em cards apenas se houver busca */}
+                    {searchTerm && (
+                        <div className="content-container search-results">
+                            <div className="row">
+                                {filteredStudents.length === 0 ? (
+                                    <p>Nenhum aluno encontrado</p>
+                                ) : (
+                                    filteredStudents.map(student => (
+                                        <div className="col-12 col-md-6 col-lg-4 mb-4" key={student.id}>
+                                            <div 
+                                                className="card aluno-card-receipt" 
+                                                onClick={() => handleSelectStudent(student)}
+                                            >
+                                                <div className="full-width-name">
+                                                    <h5 className="card-title">{student.name}</h5>
+                                                </div>
+
+                                                <div className="d-flex align-items-center">
+                                                    <div className="profile-container-receipt">
+                                                        <img
+                                                            alt={`Imagem do perfil de ${student.name}`}
+                                                            className="rounded-circle profile-img"
+                                                            src={student.img}
+                                                            width="80"
+                                                            height="80"
+                                                        />
+                                                        <div className={`status-dot ${student.value}`}></div>
+                                                    </div>
+
+                                                    <div className="ms-3">
+                                                        <div className="icon-text">
+                                                            <FaCalendarAlt size={18} className="iconsMenu" />
+                                                            <span className="card-text">{student.day}</span>
+                                                        </div>
+                                                        <div className="icon-text">
+                                                            <FaClock size={18} className="iconsMenu" />
+                                                            <span className="card-text">{student.hour}</span>
+                                                        </div>
+                                                        <div className="icon-text">
+                                                            <FaMusic size={18} className="iconsMenu" />
+                                                            <span className="card-text">{student.instrument}</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="ms-auto text-end second-column">
+                                                        <div className="icon-text icon-text-money">
+                                                            <FaDollarSign size={18} className="iconsMenu" />
+                                                            <span className={`price ${student.status}`}>R$ {student.value}</span>
+                                                        </div>
+                                                        <div className="icon-text">
+                                                            <FaUsers size={18} className="iconsMenu" />
+                                                            <span className="status">{student.type}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Renderiza o aluno selecionado com margem superior */}
+                {selectedStudent && (
+                    <div className="selected-student mt-4">
+                        <h3 style={{fontSize:"19px"}}>Aluno Selecionado:</h3>
+                        <div className="card aluno-card-receipt selected">
+                            <div className="full-width-name">
+                                <h5 className="card-title">{selectedStudent.name}</h5>
+                            </div>  
+                            <div className="d-flex align-items-center">
+                                <div className="profile-container">
+                                    <img
+                                        alt={`Imagem do perfil de ${selectedStudent.name}`}
+                                        className="rounded-circle profile-img"
+                                        src={selectedStudent.img}
+                                        width="80"
+                                        height="80"
+                                    />
+                                    <div className={`status-dot ${selectedStudent.value}`}></div>
+                                </div>
+
+                                <div className="ms-3">
+                                    <div className="icon-text">
+                                        <FaCalendarAlt size={18} className="iconsMenu" />
+                                        <span className="card-text">{selectedStudent.day}</span>
+                                    </div>
+                                    <div className="icon-text">
+                                        <FaClock size={18} className="iconsMenu" />
+                                        <span className="card-text">{selectedStudent.hour}</span>
+                                    </div>
+                                    <div className="icon-text">
+                                        <FaMusic size={18} className="iconsMenu" />
+                                        <span className="card-text">{selectedStudent.instrument}</span>
+                                    </div>
+                                </div>
+
+                                <div className="ms-auto text-end second-column">
+                                    <div className="icon-text icon-text-money">
+                                        <FaDollarSign size={18} className="iconsMenu" />
+                                        <span className={`price ${selectedStudent.status}`}>R$ {selectedStudent.value}</span>
+                                    </div>
+                                    <div className="icon-text">
+                                        <FaUsers size={18} className="iconsMenu" />
+                                        <span className="status">{selectedStudent.type}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button 
+                                className="remove-button" 
+                                onClick={handleRemoveStudent}
+                            >
+                                Remover
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
 
 
 
-                <div className="container mt-4 register-container">
+                <div className="container mt-4 register-container-receipt">
                     <div className="mb-3">
                         <label className="form-label">Aluno está pagando referente ao mês de:</label>
                         <div className="row">

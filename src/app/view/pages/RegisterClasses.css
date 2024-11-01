@@ -3,13 +3,21 @@ body {
     
 }
 
-.register-container {
+.register-container-classes {
     max-width: 600px;
+    height: 110vh;
+    overflow-y: auto; 
     margin: 0 auto;
     padding: 20px;
     background-color: #fff;
     border-radius: 8px;
-    
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+} 
+
+
+.classes-test{
+    margin-top: 200px !important;
 }
 
 .title-text{ 
@@ -113,6 +121,35 @@ body {
     margin-top: 50px;
   }
 
+  .fixed-footer-background-classes {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px; /* Ajuste a altura conforme necessário */
+    background-color: #ffffff; /* Cor de fundo branca */
+    z-index: 99; /* Certifique-se de que o fundo esteja atrás dos botões */
+    margin-top: 40px !important;
+}
+
+/* Estilo para o botão de recebimento */
+.btn-receipt-classes {
+    width: 100%;
+    padding: 10px;
+    background-color: #101728 !important;
+    color: #ffffff !important;
+    font-size: 20px !important;
+    font-weight: 500;
+    border-radius: 5px;
+    position: fixed;
+    bottom: 10px; /* Distância do rodapé para o botão de recebimento */
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    max-width: 400px;
+    z-index: 100; /* Certifique-se de que o botão esteja à frente do fundo */
+}
+
   .photo-container {
     margin-top: 20px;
     position: relative;
@@ -175,13 +212,44 @@ body {
 }
 
 .search-bar-classes {
-    background-color: #fff;
-    width: calc(100% - 36px); /* Ajusta a largura para não ocupar 100vw */
-    box-sizing: border-box; /* Inclui padding e borda no cálculo do width */
-    margin-bottom: 20px; /* Espaçamento inferior para separar de outros elementos */
-    margin-top: 20px; /* Espaçamento superior para a barra aparecer logo abaixo do topo */
-    margin-left: 18px; /* Margem esquerda */
-    height: 100px; /* Altura da barra de busca */
+    margin-bottom: 100px;
+}
+.search-results, .selected-students {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.card-title-classes {
+    font-size: 18px;
+    font-family: 'CodecProExtraBold', sans-serif;
+    margin: 0;
+  }
+
+.aluno-card-class {
+    width: 150px;
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    transition: transform 0.2s;
+    gap: 10px;
+}
+
+.aluno-card-classes:hover {
+    transform: scale(1.05);
+}
+
+.selected .remove-button {
+    margin-top: 10px;
+    color: white;
+    background-color: red;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
 .search-bar-classes input {
