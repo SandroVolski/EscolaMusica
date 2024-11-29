@@ -1,10 +1,12 @@
-import React, { useRef,useState } from 'react';
+import React, { useRef, useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Navbar, Nav, NavDropdown, Button, ToggleButton, Form, Row, Col, Card } from 'react-bootstrap';
 import { FaUserGraduate, FaDollarSign, FaCalendarAlt, FaPlusCircle, FaReceipt, FaUsers, FaBell, FaCircle } from "react-icons/fa";
 import './Home.css'; // Para seu CSS customizado
 import Header from '../../components/Header';
 import Sidebar from '../../components/Sidebar';
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import { db } from '../../../firebaseConfig';
 
 import Students from '../pages/Students';
 import Finance from '../pages/Finance';
@@ -13,13 +15,100 @@ import RegisterStudent from '../pages/RegisterStudent';
 import Receipt from '../pages/Receipt';
 import Classes from '../pages/Classes';
 
-const Home = () => {
-
+const Home = ({ student }) => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [alunos, setAlunos] = useState([]);
+  const [studentStatuses, setStudentStatuses] = useState([]);
+
   const navigate = useNavigate();
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
+
+  useEffect(() => {
+    const fetchAlunos = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "students"));
+        const alunosData = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setAlunos(alunosData);
+      } catch (error) {
+        console.error("Erro ao buscar dados:", error);
+      }
+    };
+
+    fetchAlunos();
+  }, []);
+
+  const fetchPaymentStatus = async (studentId) => {
+    try {
+      const studentDocRef = doc(db, "students", studentId);
+      const studentDoc = await getDoc(studentDocRef);
+
+      if (studentDoc.exists()) {
+        const studentData = studentDoc.data();
+        const payments = studentData.payments || {};
+        const venceDia = studentData.venceDia; // Obter o dia do vencimento do banco de dados
+
+        if (!venceDia) {
+          console.error("VenceDia não definido para este aluno.");
+          return "nao pago"; // Retorna como "não pago" se não houver valor definido
+        }
+
+        const currentMonth = new Date().toLocaleString('pt-BR', { month: 'long' }).toLowerCase();
+        const currentYear = new Date().getFullYear();
+        const monthIndex = new Date().getMonth(); // Mês atual (0-11)
+        const dueDate = new Date(currentYear, monthIndex, venceDia); // Gera a data de vencimento
+
+        // Verificar status de pagamento do mês atual
+        const paymentInfo = payments[currentMonth];
+        const today = new Date();
+
+        if (paymentInfo) {
+          if (paymentInfo === "nao pago" && today > dueDate) {
+            return "em atraso"; // Se passou do vencimento
+          }
+          return paymentInfo; // Retorna o status atual ("pago" ou "não pago")
+        }
+
+        return "nao pago"; // Retorna como "não pago" se não houver informações
+      }
+    } catch (error) {
+      console.error("Erro ao recuperar o status de pagamento:", error);
+    }
+    return "nao pago"; // Retorna como "não pago" em caso de erro
+  };
+
+  // Função para buscar e setar os status dos alunos
+  useEffect(() => {
+    const fetchStatuses = async () => {
+      const statuses = await Promise.all(
+        alunos.map(async (aluno) => {
+          const status = await fetchPaymentStatus(aluno.id);
+          return { id: aluno.id, status };  // Adiciona o status do aluno junto com o id
+        })
+      );
+      setStudentStatuses(statuses);
+    };
+
+    if (alunos.length > 0) {
+      fetchStatuses();
+    }
+  }, [alunos]);
+
+  const summary = useMemo(() => {
+    const totals = { pago: 0, "nao pago": 0, "em atraso": 0 };
+
+    studentStatuses.forEach(({ status }) => {
+      if (status === "pago") totals.pago++;
+      else if (status === "nao pago") totals["nao pago"]++;
+      else if (status === "em atraso") totals["em atraso"]++;
+    });
+
+    return totals;
+  }, [studentStatuses]);
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const carouselRef = useRef(null);
@@ -115,15 +204,18 @@ const Home = () => {
           <h3>Resumo</h3>
           <p className="class-info-summary">Veja tudo o que está acontecendo</p>
           <div className="summary-info">
-          <span style={{ color: "#39b54a" }}>
-            <FaCircle style={{ color: "#39b54a", marginLeft: "10px" }} /> 38
-          </span>
-          <span style={{ color: "#f0e200" }}>
-            <FaCircle style={{ color: "#f0e200", marginLeft: "10px" }} /> 28
-          </span>
-          <span style={{ color: "#ff002e" }}>
-            <FaCircle style={{ color: "#ff002e", marginLeft: "10px" }} /> 6
-          </span>
+            <span style={{ color: "#39b54a" }}>
+              <FaCircle style={{ color: "#39b54a", marginLeft: "10px" }} />{" "}
+              {summary.pago}
+            </span>
+            <span style={{ color: "#f0e200" }}>
+              <FaCircle style={{ color: "#f0e200", marginLeft: "10px" }} />{" "}
+              {summary["nao pago"]}
+            </span>
+            <span style={{ color: "#ff002e" }}>
+              <FaCircle style={{ color: "#ff002e", marginLeft: "10px" }} />{" "}
+              {summary["em atraso"]}
+            </span>
           </div>
         </div>
       </div>

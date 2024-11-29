@@ -70,22 +70,43 @@ const RegisterStudent = () => {
 
         setErrors(newErrors);
 
-        if (Object.keys(newErrors).length === 0 && photo) {
+        if (Object.keys(newErrors).length === 0) {
             try {
-                const storage = getStorage(); // Instanciar o Firebase Storage
-                const storageRef = ref(storage, `students/${formData.name}-${Date.now()}.png`); // Criar referência no Storage
-
-                // Converter dataURL (base64) para Blob para enviar ao Storage
-                const response = await fetch(photo);
-                const blob = await response.blob();
-
-                // 1. Upload da imagem para o Firebase Storage
-                await uploadBytes(storageRef, blob);
-
-                // 2. Pegar o URL da imagem
-                const imageUrl = await getDownloadURL(storageRef);
-
-                // 3. Salvar os dados no Firestore com o URL da imagem
+                let imageUrl = ''; // Inicializar com uma string vazia
+    
+                // Processar a foto apenas se ela existir
+                if (photo) {
+                    const storage = getStorage(); // Instanciar o Firebase Storage
+                    const storageRef = ref(storage, `students/${formData.name}-${Date.now()}.png`); // Criar referência no Storage
+    
+                    // Converter dataURL (base64) para Blob para enviar ao Storage
+                    const response = await fetch(photo);
+                    const blob = await response.blob();
+    
+                    // Upload da imagem para o Firebase Storage
+                    await uploadBytes(storageRef, blob);
+    
+                    // Pegar o URL da imagem
+                    imageUrl = await getDownloadURL(storageRef);
+                }
+    
+                // Criar o campo 'payments' com 12 meses de status "não pago"
+                const payments = {
+                    janeiro: "nao pago",
+                    fevereiro: "nao pago",
+                    março: "nao pago",
+                    abril: "nao pago",
+                    maio: "nao pago",
+                    junho: "nao pago",
+                    julho: "nao pago",
+                    agosto: "nao pago",
+                    setembro: "nao pago",
+                    outubro: "nao pago",
+                    novembro: "nao pago",
+                    dezembro: "nao pago"
+                };
+    
+                // Salvar os dados no Firestore (o campo img será vazio se a foto não foi fornecida)
                 await addDoc(collection(db, "students"), {
                     name: formData.name,
                     instrument: formData.instrumentos,
@@ -94,18 +115,19 @@ const RegisterStudent = () => {
                     day: formData.diaAula,
                     hour: formData.horarioAula,
                     value: formData.valor,
-                    img: imageUrl // Salvar o URL da imagem
+                    img: imageUrl, // Campo será vazio se não houver foto
+                    venceDia: formData.venceDia,
+                    payments: payments
                 });
-
+    
                 toast.success('Dados salvos com sucesso!', { position: 'top-center' });
                 setTimeout(() => navigate('/students'), 3000); // Redirecionar após 3 segundos
-
             } catch (error) {
                 console.error("Erro ao salvar os dados: ", error);
                 toast.error('Erro ao salvar os dados, tente novamente.');
             }
         } else {
-            toast.error('Por favor, tire uma foto.');
+            toast.error('Preencha os campos obrigatórios.');
         }
     };
 

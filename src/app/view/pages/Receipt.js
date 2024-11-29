@@ -10,10 +10,10 @@ import PhotoUpload from '../../components/PhotoUpload';
 import { AiFillPicture } from 'react-icons/ai';
 import { FaSearch, FaCalendarAlt, FaClock, FaMusic, FaDollarSign, FaUsers } from "react-icons/fa";
 import qrcode from '../../assets/imgs/qrcodeGoogle.png';
-import { collection, getDocs } from 'firebase/firestore';
+import { doc, collection, getDocs, getDoc, updateDoc, arrayUnion, getFirestore  } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig';
 
-const Receipt = () => {
+const Receipt = ({ studentId }) => {
     const [menuOpen, setMenuOpen] = useState(false);
     
     const [formData, setFormData] = useState({
@@ -94,6 +94,89 @@ const Receipt = () => {
     const handleRemoveStudent = () => {
         setSelectedStudent(null); // Remove o aluno selecionado
     };
+    
+
+    const handlePayment = async (studentId, selectedMonth) => {
+        try {
+            const studentDocRef = doc(db, 'students', studentId);
+    
+            // Atualizar o status do pagamento para o mês selecionado sem afetar os outros meses
+            await updateDoc(studentDocRef, {
+                [`payments.${selectedMonth}`]: "pago" // Define o mês como "pago", sem sobrescrever os meses anteriores
+            });
+    
+            alert('Pagamento atualizado com sucesso!');
+        } catch (error) {
+            console.error('Erro ao atualizar o status de pagamento:', error);
+        }
+    };
+
+    const fetchPaymentStatus = async (studentId) => {
+        try {
+            const studentDocRef = doc(db, "students", studentId);
+            const studentDoc = await getDoc(studentDocRef);
+    
+            if (studentDoc.exists()) {
+                const studentData = studentDoc.data();
+                const payments = studentData.payments || {};
+                const venceDia = studentData.venceDia; // Obter o dia do vencimento do banco de dados
+    
+                if (!venceDia) {
+                    console.error("VenceDia não definido para este aluno.");
+                    return "nao pago"; // Retorna como "não pago" se não houver valor definido
+                }
+    
+                const currentMonth = new Date().toLocaleString('pt-BR', { month: 'long' }).toLowerCase();
+                const currentYear = new Date().getFullYear();
+                const monthIndex = new Date().getMonth(); // Mês atual (0-11)
+                const dueDate = new Date(currentYear, monthIndex, venceDia); // Gera a data de vencimento
+    
+                // Verificar status de pagamento do mês atual
+                const paymentInfo = payments[currentMonth];
+                const today = new Date();
+    
+                if (paymentInfo) {
+                    if (paymentInfo === "nao pago" && today > dueDate) {
+                        return "em atraso"; // Se passou do vencimento
+                    }
+    
+                    return paymentInfo; // Retorna o status atual ("pago" ou "não pago")
+                }
+    
+                return "nao pago"; // Retorna como "não pago" se não houver informações
+            }
+        } catch (error) {
+            console.error("Erro ao recuperar o status de pagamento:", error);
+        }
+        return "nao pago"; // Retorna como "não pago" em caso de erro
+    };
+
+    const PaymentStatus = ({ studentId, value }) => {
+        const [paymentStatus, setPaymentStatus] = useState("nao pago");
+      
+        useEffect(() => {
+            const fetchStatus = async () => {
+                const status = await fetchPaymentStatus(studentId);
+                console.log(`Status retornado do fetch para o aluno ${studentId}: ${status}`);
+                setPaymentStatus(status.trim().toLowerCase());
+            };
+        
+            fetchStatus();
+        }, [studentId]);
+
+        console.log(`Estado atual do pagamento ${studentId}: ${paymentStatus}`);
+      
+        return (
+                
+                <span className={`price ${
+                    paymentStatus === "nao pago" ? "nao-pago" 
+                    : paymentStatus === "pago" ? "pago" 
+                    : "em-atraso"
+                }`}>{value}</span>
+                
+        );
+      };
+    
 
     return (
         <>
@@ -129,7 +212,7 @@ const Receipt = () => {
 
                     {/* Renderiza os resultados da pesquisa em cards apenas se houver busca */}
                     {searchTerm && (
-                        <div className="content-container search-results">
+                        <div className="content-container search-results-receipt">
                             <div className="row">
                                 {filteredStudents.length === 0 ? (
                                     <p>Nenhum aluno encontrado</p>
@@ -174,7 +257,7 @@ const Receipt = () => {
                                                     <div className="ms-auto text-end second-column">
                                                         <div className="icon-text icon-text-money">
                                                             <FaDollarSign size={18} className="iconsMenu" />
-                                                            <span className={`price ${student.status}`}>R$ {student.value}</span>
+                                                            <PaymentStatus studentId={student.id} value={student.value} />
                                                         </div>
                                                         <div className="icon-text">
                                                             <FaUsers size={18} className="iconsMenu" />
@@ -229,7 +312,7 @@ const Receipt = () => {
                                 <div className="ms-auto text-end second-column">
                                     <div className="icon-text icon-text-money">
                                         <FaDollarSign size={18} className="iconsMenu" />
-                                        <span className={`price ${selectedStudent.status}`}>R$ {selectedStudent.value}</span>
+                                        <PaymentStatus studentId={selectedStudent.id} value={selectedStudent.value} />
                                     </div>
                                     <div className="icon-text">
                                         <FaUsers size={18} className="iconsMenu" />
@@ -254,7 +337,7 @@ const Receipt = () => {
                     <div className="mb-3">
                         <label className="form-label">Aluno está pagando referente ao mês de:</label>
                         <div className="row">
-                            {["Janeiro", "Maio", "Setembro", "Fevereiro", "Junho", "Outubro", "Março", "Julho", "Novembro", "Abril", "Agosto", "Dezembro"].map((instrumento, index) => (
+                            {["janeiro", "maio", "setembro", "fevereiro", "junho", "outubro", "março", "julho", "novembro", "abril", "agosto", "dezembro"].map((instrumento, index) => (
                                 <div className="col-4 col-md-3 col-lg-2 mb-3" key={index}>
                                     <div className="form-check font-test    ">
                                         <input
@@ -280,7 +363,19 @@ const Receipt = () => {
 
                 <div className="fixed-footer-background"></div>
                 <div className="button-container">
-                    <button className="btn-receipt">Receber</button>
+                    <button
+                        onClick={() => {
+                            if (selectedStudent && formData.instrumentos.length > 0) {
+                                const selectedMonth = formData.instrumentos[0]; // Considera o primeiro mês marcado
+                                handlePayment(selectedStudent.id, selectedMonth);
+                            } else {
+                                alert("Selecione um aluno e o mês de pagamento.");
+                            }
+                        }}
+                        className="btn-receipt"
+                    >
+                        Receber
+                    </button>
                     <button className="btn-cancell">Cancelar</button>
                 </div>
             </form>

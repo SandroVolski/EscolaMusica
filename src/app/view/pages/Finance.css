@@ -25,3 +25,221 @@
     font-family: 'CodecProExtraBold', sans-serif;
 }
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.header-section {
+    font-family: 'CodecProExtraBold', sans-serif;
+    background-color: white;
+    padding: 15px;
+    box-shadow: 0 0 19px rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    margin-top: 90px;
+}
+
+.month-control {
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.icon-nav {
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.receita-atual {
+    margin-top: 10px;
+}
+
+.receita-valor {
+    color: green;
+    font-size: 32px;
+}
+
+.status-filter {
+    margin-top: 5px;
+}
+
+.status-button {
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.status-pagos {
+    color: green;
+}
+
+.status-atraso {
+    color: red;
+}
+
+.status-dia {
+    color: orange;
+}
+
+.divider {
+    border-bottom: 1px solid #101728;
+    padding-bottom: 0px; /* Ajuste o espaçamento conforme necessário */
+    margin-bottom: 0px; /* Ajuste o espaçamento conforme necessário */
+}
+
+
+
+
+
+
+
+
+
+
+
+.content-container-finance {
+    padding-top: 20px; /* Espaço flexível para ajustar ao header ou barra de pesquisa */
+    padding-left: 20px;
+    padding-right: 20px;
+    height: 80vh; /* A altura será 100% da altura da tela */
+    min-height: calc(100vh - 100px); /* Garante que o conteúdo ocupe a tela inteira */
+    overflow-y: auto; /* Permite rolar o conteúdo */
+    margin-bottom: 200px;
+  }
+
+
+
+
+
+
+
+
+
+
+.aluno-card-finance {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    transition: transform 0.2s;
+}
+
+.aluno-card-finance:hover {
+    transform: translateY(-5px);
+}
+
+.aluno-name-finance {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+}
+
+.valor-finance {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.valor-finance.green {
+    color: green;
+}
+
+.valor-finance.red {
+    color: red;
+}
+
+.valor-finance.yellow {
+    color: #ffc107;
+}
+
+.me-3 {
+    margin-right: 0.75rem;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.status-select {
+    font-family: 'CodecPro', sans-serif;
+    padding: 8px;
+    border: 1px solid transparent !important;
+    border-radius: 4px;
+    appearance: none;
+    background-color: transparent !important;
+    font-size: 16px;
+    position: relative;
+}
+
+.status-select option {
+    padding: 8px;
+}
+
+/* Bolinhas pequenas */
+
+
+
+
+
+
+
+
+
+
+
+.fixed-footer {
+    font-family: 'CodecProExtraBold', sans-serif;
+    font-size: 22px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #f8f9fa; /* Cor de fundo do retângulo */
+    box-shadow: 0 0 19px rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    border-top: 2px solid #dcdcdc; /* Linha no topo */
+    z-index: 1000; /* Para garantir que fique acima do conteúdo */
+}
+
+.status-item {
+    text-align: center;
+}
+
+.status-title {
+    font-weight: bold;
+    margin: 0;
+}
+
+.status-value {
+    font-weight: bold;
+    margin: 0;
+    font-size: 1.2em; /* Tamanho do texto */
+}
+
+.falta {
+    color: #f0e200; /* Cor amarela */
+}
+
+.atraso {
+    color: #ff002e; /* Cor vermelha */
+}

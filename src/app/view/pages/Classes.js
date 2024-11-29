@@ -7,6 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { FaSearch, FaPlus, FaCalendarAlt, FaClock } from "react-icons/fa";
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig'; // Ajuste o caminho conforme o seu arquivo de configuração do Firebase 
+import perfillogo from '../../assets/imgs/perfillogo.png';
 
 const Classes = () => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -52,6 +53,76 @@ const Classes = () => {
         fetchClasses();
     }, []);
 
+    const fetchPaymentStatus = async (studentId) => {
+        try {
+            const studentDocRef = doc(db, "students", studentId);
+            const studentDoc = await getDoc(studentDocRef);
+    
+            if (studentDoc.exists()) {
+                const studentData = studentDoc.data();
+                const payments = studentData.payments || {};
+                const venceDia = studentData.venceDia; // Obter o dia do vencimento do banco de dados
+    
+                if (!venceDia) {
+                    console.error("VenceDia não definido para este aluno.");
+                    return "nao pago"; // Retorna como "não pago" se não houver valor definido
+                }
+    
+                const currentMonth = new Date().toLocaleString('pt-BR', { month: 'long' }).toLowerCase();
+                const currentYear = new Date().getFullYear();
+                const monthIndex = new Date().getMonth(); // Mês atual (0-11)
+                const dueDate = new Date(currentYear, monthIndex, venceDia); // Gera a data de vencimento
+    
+                // Verificar status de pagamento do mês atual
+                const paymentInfo = payments[currentMonth];
+                const today = new Date();
+    
+                if (paymentInfo) {
+                    if (paymentInfo === "nao pago" && today > dueDate) {
+                        return "em atraso"; // Se passou do vencimento
+                    }
+    
+                    return paymentInfo; // Retorna o status atual ("pago" ou "não pago")
+                }
+    
+                return "nao pago"; // Retorna como "não pago" se não houver informações
+            }
+        } catch (error) {
+            console.error("Erro ao recuperar o status de pagamento:", error);
+        }
+        return "nao pago"; // Retorna como "não pago" em caso de erro
+    };
+    
+
+    const StatusDot = ({ studentId }) => {
+        const [paymentStatus, setPaymentStatus] = useState("nao pago");
+    
+        useEffect(() => {
+            const fetchStatus = async () => {
+                const status = await fetchPaymentStatus(studentId);
+                console.log(`Status retornado do fetch para o aluno ${studentId}: ${status}`);
+                setPaymentStatus(status.trim().toLowerCase());
+            };
+        
+            fetchStatus();
+        }, [studentId]);
+        
+        console.log(`Estado atual do ponto para o aluno ${studentId}: ${paymentStatus}`);
+    
+        return (
+            <div
+                className={`status-circle ${
+                    paymentStatus === "nao pago" ? "nao-pago" 
+                    : paymentStatus === "pago" ? "pago" 
+                    : "em-atraso"
+                }`}
+            >
+                {/* Ícone ou mensagem aqui */}
+            </div>
+            
+        );
+    };
+
     return (
         <>
             <Header toggleMenu={toggleMenu} />
@@ -78,7 +149,7 @@ const Classes = () => {
                                         <img
                                             alt={`Imagem do perfil de ${turma.className}`}
                                             className="rounded-circle profile-img"
-                                            src={turma.img}
+                                            src={turma.img ? turma.img : perfillogo}
                                             width="90"
                                             height="90"
                                         />
@@ -98,7 +169,9 @@ const Classes = () => {
                                             <div className="alunos-grid">
                                                 {turma.students?.map((student, i) => (
                                                     <div key={i} className="aluno-status">
-                                                        <span className={`status-circle bg-${student.corBadge}`}></span>
+                                                        {/* Bolinha com a cor do status */}
+                                                        <StatusDot studentId={student.id}>    </StatusDot>
+                                                        {/* Nome do aluno */}
                                                         <span className="aluno-nome">{student.name}</span>
                                                     </div>
                                                 ))}

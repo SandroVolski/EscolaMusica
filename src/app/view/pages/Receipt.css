@@ -3,8 +3,8 @@
     margin-bottom: 35% !important;
 }
 
-.search-results {
-    
+.search-results-receipt {
+    position: sticky;
     top: 0;
     z-index: 10;
     background-color: #f9f9f9; /* Alteração para um fundo mais suave */

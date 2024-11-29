@@ -119,9 +119,7 @@
     
 }
 
-.icon-text-money{
-    color: #26ad00;
-} 
+
   
 .iconsMenu{
     margin-right: 5px
@@ -208,11 +206,23 @@
   }
   
   .status-circle {
-    width: 15px;
-    height: 15px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
-    margin-right: 8px;
-    
+    display: inline-block;
+    margin-right: 8px; /* Espaço entre a bolinha e o nome */
+  }
+
+  .status-circle.pago {
+    background-color: green; /* Cor para 'pago' */
+  }
+  
+  .status-circle.nao-pago {
+    background-color: yellow; /* Cor para 'não pago' */
+  }
+  
+  .status-circle.em-atraso {
+    background-color: red; /* Cor para 'em atraso' */
   }
   
   .aluno-nome {

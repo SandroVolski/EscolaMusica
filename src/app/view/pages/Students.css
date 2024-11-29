@@ -65,19 +65,26 @@
 
 .status-dot {
   position: absolute;
-  bottom: 10px; /* Posição no canto inferior esquerdo */
-  left: 10px;
+  bottom: 20px;
+  left: 0px;
   width: 25px;
   height: 25px;
-  background-color: #26ad00; /* Indicador de status não pago (por exemplo) */
-  border-radius: 50%; /* Torna a div um círculo */
-  border: 2px solid white; /* Borda branca ao redor, para destacar */
+  border-radius: 50%;
+  border: 2px solid white;
 }
 
-/* Se aluno tiver pago, você pode usar outra cor */
-.status-dot.pago {
-  background-color: #26ad00; /* Indicador verde para status de pagamento */
+.status-dot.nao-pago {
+  background-color: yellow; /* Cor amarela para 'não pago' */
 }
+
+.status-dot.pago {
+  background-color: green; /* Cor verde para 'pago' */
+}
+
+.status-dot.em-atraso {
+  background-color: red; /* Cor vermelha para 'em atraso' */
+}
+
 
   /* Cartões de alunos */
 .aluno-card {
@@ -117,9 +124,23 @@
   color: #101728;
 }
 
-.icon-text-money{
-  color: #26ad00;
+.price.pago {
+  color: green !important; /* Cor para 'pago' */
+  font-weight: bold;
 }
+
+.price.nao-pago {
+  color: rgb(171, 171, 1) !important;
+  font-weight: bold;
+}
+
+.price.em-atraso {
+  color: red !important;
+  font-weight: bold;
+}
+
+
+
 
 .iconsMenu{
   margin-right: 5px
