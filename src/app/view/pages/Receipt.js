@@ -12,6 +12,7 @@ import { FaSearch, FaCalendarAlt, FaClock, FaMusic, FaDollarSign, FaUsers } from
 import qrcode from '../../assets/imgs/qrcodeGoogle.png';
 import { doc, collection, getDocs, getDoc, updateDoc, arrayUnion, getFirestore  } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig';
+import perfillogo from '../../assets/imgs/perfillogo.png';
 
 const Receipt = ({ studentId }) => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -232,7 +233,7 @@ const Receipt = ({ studentId }) => {
                                                         <img
                                                             alt={`Imagem do perfil de ${student.name}`}
                                                             className="rounded-circle profile-img"
-                                                            src={student.img}
+                                                            src={student.img ? student.img : perfillogo}
                                                             width="80"
                                                             height="80"
                                                         />
@@ -287,7 +288,7 @@ const Receipt = ({ studentId }) => {
                                     <img
                                         alt={`Imagem do perfil de ${selectedStudent.name}`}
                                         className="rounded-circle profile-img"
-                                        src={selectedStudent.img}
+                                        src={selectedStudent.img ? selectedStudent.img : perfillogo}
                                         width="80"
                                         height="80"
                                     />

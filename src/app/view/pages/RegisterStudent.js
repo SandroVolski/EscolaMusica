@@ -105,6 +105,17 @@ const RegisterStudent = () => {
                     novembro: "nao pago",
                     dezembro: "nao pago"
                 };
+
+                // Obtendo o mês atual e o dia de vencimento
+                const currentMonth = new Date().toLocaleString('pt-BR', { month: 'long' }).toLowerCase();
+                const vencimento = new Date(formData.venceDia);
+                const today = new Date();
+
+                // Verificando se o vencimento já passou
+                if (vencimento < today) {
+                    // Marca o mês atual como "em atraso" se o vencimento já passou
+                    payments[currentMonth] = "em atraso";
+                }
     
                 // Salvar os dados no Firestore (o campo img será vazio se a foto não foi fornecida)
                 await addDoc(collection(db, "students"), {

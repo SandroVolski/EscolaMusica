@@ -8,13 +8,6 @@ import Sidebar from '../../components/Sidebar';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig';
 
-import Students from '../pages/Students';
-import Finance from '../pages/Finance';
-import Calendar from '../pages/Calendar';
-import RegisterStudent from '../pages/RegisterStudent';
-import Receipt from '../pages/Receipt';
-import Classes from '../pages/Classes';
-
 const Home = ({ student }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [alunos, setAlunos] = useState([]);
@@ -113,12 +106,97 @@ const Home = ({ student }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const carouselRef = useRef(null);
 
+  /*const handleScroll = () => {
+    const slideWidth = carouselRef.current.offsetWidth;
+    const scrollLeft = carouselRef.current.scrollLeft;
+    const newIndex = Math.round(scrollLeft / slideWidth);
+    setCurrentSlide(newIndex);
+  };*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  const [groupedClasses, setGroupedClasses] = useState({});
+
+  // Função para agrupar os alunos por dia e horário
+  useEffect(() => {
+    if (alunos.length > 0) {
+      const grouped = alunos.reduce((acc, aluno) => {
+        const key = `${aluno.day}-${aluno.hour}`;
+        if (!acc[key]) acc[key] = [];
+        acc[key].push(aluno);
+        return acc;
+      }, {});
+      setGroupedClasses(grouped);
+    }
+  }, [alunos]);
+
+  // Função para encontrar a página inicial do carrossel com base no dia e hora atuais
+  useEffect(() => {
+    if (Object.keys(groupedClasses).length > 0) {
+      const now = new Date();
+      const currentDay = now.getDay(); // Retorna o dia da semana (0-6)
+      const currentHour = now.getHours(); // Retorna a hora atual
+      const key = `${currentDay}-${currentHour}`;
+
+      const keys = Object.keys(groupedClasses);
+      const initialIndex = keys.findIndex(k => k === key);
+      setCurrentSlide(initialIndex >= 0 ? initialIndex : 0); // Define a página inicial
+    }
+  }, [groupedClasses]);
+
   const handleScroll = () => {
     const slideWidth = carouselRef.current.offsetWidth;
     const scrollLeft = carouselRef.current.scrollLeft;
     const newIndex = Math.round(scrollLeft / slideWidth);
     setCurrentSlide(newIndex);
   };
+
+  const renderCarouselSlides = () => {
+    return Object.entries(groupedClasses).map(([key, alunos], index) => {
+      const [day, hour] = key.split('-');
+      const title = alunos.length > 1 ? "Turma" : "Individual";
+      return (
+        <div key={index} className="class-info">
+          <h4>{title}</h4>
+          <p className="class-date">Dia: {day}, Horário: {hour}h</p>
+          <div className="student-list">
+            {alunos.map(aluno => (
+              <span key={aluno.id}>
+                {aluno.name} ({aluno.instrument})
+              </span>
+            ))}
+          </div>
+        </div>
+      );
+    });
+  };
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
 
   return (
     <>
@@ -164,30 +242,30 @@ const Home = ({ student }) => {
             ref={carouselRef}
           >
             <div className="class-info">
-              <p className="class-date">12/09 - 15h</p>
+              <p className="class-date">02/12 - 13h</p>
               <p className="class-details">
                 <span className="class-students">Turma (05 alunos) - </span>
                 <span className="class-instrument">Violão</span>
               </p>
               <div className="student-list">
-                <span><FaCircle style={{ color: "green", marginRight: "5px" }} /> Sandro</span>
-                <span><FaCircle style={{ color: "blue", marginRight: "5px" }} /> Eduardo</span>
-                <span><FaCircle style={{ color: "yellow", marginRight: "5px" }} /> Juliana</span>
-                <span><FaCircle style={{ color: "orange", marginRight: "5px" }} /> Regiane</span>
-                <span><FaCircle style={{ color: "red", marginRight: "5px" }} /> Tiago</span>
+                <span><FaCircle style={{ color: "green", marginRight: "5px" }} />João</span>
+                <span><FaCircle style={{ color: "yellow", marginRight: "5px" }} />Marina</span>
+                <span><FaCircle style={{ color: "yellow", marginRight: "5px" }} />José</span>
+                <span><FaCircle style={{ color: "red", marginRight: "5px" }} />Tamires</span>
+                <span><FaCircle style={{ color: "green", marginRight: "5px" }} />Ana</span>
               </div>
             </div>
             <div className="class-info">
-              <p className="class-date">13/09 - 10h</p>
+              <p className="class-date">02/12 - 14h</p>
               <p className="class-details">
                 <span className="class-students">Turma (04 alunos) - </span>
-                <span className="class-instrument">Piano</span>
+                <span className="class-instrument">Violão</span>
               </p>
               <div className="student-list">
                 <span><FaCircle style={{ color: "green", marginRight: "5px" }} /> Ana</span>
-                <span><FaCircle style={{ color: "blue", marginRight: "5px" }} /> João</span>
+                <span><FaCircle style={{ color: "yellow", marginRight: "5px" }} /> João</span>
                 <span><FaCircle style={{ color: "yellow", marginRight: "5px" }} /> Carla</span>
-                <span><FaCircle style={{ color: "orange", marginRight: "5px" }} /> Paulo</span>
+                <span><FaCircle style={{ color: "yellow", marginRight: "5px" }} /> Paulo</span>
               </div>
             </div>
           </div>
@@ -225,96 +303,3 @@ const Home = ({ student }) => {
 };
 
 export default Home;
-
-
-
-
-
-
-
-{/*
-  
-import React from "react";
-import "./Home.css";
-import { Navbar, Container, Row, Col } from "react-bootstrap";
-import { FaUserGraduate, FaDollarSign, FaCalendarAlt, FaPlusCircle, FaReceipt, FaUsers, FaBell, FaCircle } from "react-icons/fa";
-
-const Home = () => {
-  return (
-    <>
-      <Navbar className="navbar">
-        <Container>
-          <Navbar.Brand href="#">
-            <img
-              src="https://storage.googleapis.com/a1aa/image/IeUQxvtyta0XKaE5dUB684WzE2PgSamlL010jNV5VCH82ixJA.jpg"
-              alt="Logo"
-              height="40"
-            />
-          </Navbar.Brand>
-          <button className="btn icon-button">
-            <FaBell />
-          </button>
-        </Container>
-      </Navbar>
-
-      <div className="main-content">
-        <h2>O que vamos fazer agora?</h2>
-
-        <div className="icon-grid">
-          <div className="icon-item">
-            <FaUserGraduate />
-            <p>Alunos</p>
-          </div>
-          <div className="icon-item">
-            <FaDollarSign />
-            <p>Financeiro</p>
-          </div>
-          <div className="icon-item">
-            <FaCalendarAlt />
-            <p>Calendário</p>
-          </div>
-          <div className="icon-item">
-            <FaPlusCircle />
-            <p>Cadastro</p>
-          </div>
-          <div className="icon-item">
-            <FaReceipt />
-            <p>Recibo</p>
-          </div>
-          <div className="icon-item">
-            <FaUsers />
-            <p>Turmas</p>
-          </div>
-        </div>
-
-        <div className="next-class">
-          <h3>Sua próxima aula será</h3>
-          <div className="class-info">
-            <p>12/09 - 15h</p>
-            <p>Turma (05 alunos) - Violão</p>
-            <div className="student-list">
-              <span><FaCircle style={{ color: "green" }} /> Sandro</span>
-              <span><FaCircle style={{ color: "blue" }} /> Eduardo</span>
-              <span><FaCircle style={{ color: "yellow" }} /> Juliana</span>
-              <span><FaCircle style={{ color: "orange" }} /> Regiane</span>
-              <span><FaCircle style={{ color: "red" }} /> Tiago</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="summary">
-          <h3>Resumo</h3>
-          <p>Veja tudo o que está acontecendo</p>
-          <div className="summary-info">
-            <span><FaCircle style={{ color: "green" }} /> 38</span>
-            <span><FaCircle style={{ color: "yellow" }} /> 28</span>
-            <span><FaCircle style={{ color: "red" }} /> 6</span>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-};
-
-export default Home;
-*/}

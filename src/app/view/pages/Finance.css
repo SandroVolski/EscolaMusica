@@ -45,7 +45,7 @@
     padding: 15px;
     box-shadow: 0 0 19px rgba(0, 0, 0, 0.8);
     z-index: 1000;
-    margin-top: 90px;
+    margin-top: 85px;
 }
 
 .month-control {
@@ -67,9 +67,9 @@
     font-size: 32px;
 }
 
-.status-filter {
+/*.status-filter {
     margin-top: 5px;
-}
+}*/
 
 .status-button {
     padding: 5px 10px;
@@ -77,17 +77,6 @@
     cursor: pointer;
 }
 
-.status-pagos {
-    color: green;
-}
-
-.status-atraso {
-    color: red;
-}
-
-.status-dia {
-    color: orange;
-}
 
 .divider {
     border-bottom: 1px solid #101728;
@@ -178,20 +167,89 @@
 
 
 
-.status-select {
-    font-family: 'CodecPro', sans-serif;
-    padding: 8px;
-    border: 1px solid transparent !important;
+.status-filter {
+    position: relative;
+    
+    width: 200px;
+}
+
+.custom-select {
+    border: 1px solid #ffffff !important;
     border-radius: 4px;
-    appearance: none;
-    background-color: transparent !important;
-    font-size: 16px;
+    padding: 5px;
+    font-family: 'CodecProExtraBold', sans-serif !important;
+    font-size: 19px;
+    cursor: pointer;
     position: relative;
 }
 
-.status-select option {
-    padding: 8px;
+.selected-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 19px;
 }
+
+.selected-option span {
+    margin-right: 5px;
+}
+
+.dropdown-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    list-style: none;
+    
+    margin: 0;
+}
+
+.dropdown-list li {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    font-size: 16px;
+    cursor: pointer;
+    color: #333; /* Cor do texto do item */
+}
+
+.dropdown-list li:hover {
+    background-color: #f8f9fa;
+}
+
+.status-circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.status-circle.gray {
+    background-color: #808080; /* Cinza */
+    color: #808080;
+}
+
+.status-circle.green {
+    background-color: #28a745; /* Verde */
+    color: #28a745;
+}
+
+.status-circle.red {
+    background-color: #dc3545; /* Vermelho */
+    color: #dc3545;
+}
+
+.status-circle.yellow {
+    background-color: #ffc107; /* Amarelo */
+    color: #ffc107;
+}
+
+
 
 /* Bolinhas pequenas */
 
@@ -219,6 +277,7 @@
     padding: 10px 0;
     border-top: 2px solid #dcdcdc; /* Linha no topo */
     z-index: 1000; /* Para garantir que fique acima do conteúdo */
+    
 }
 
 .status-item {

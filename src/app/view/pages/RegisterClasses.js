@@ -15,6 +15,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
+import perfillogo from '../../assets/imgs/perfillogo.png';
 
 const RegisterClasses = () => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -398,7 +399,7 @@ const RegisterClasses = () => {
                                             <img
                                                 alt={`Profile image of ${student.name}`}
                                                 className="rounded-circle profile-img"
-                                                src={student.img}
+                                                src={student.img ? student.img : perfillogo}
                                                 width="80"
                                                 height="80"
                                             />
@@ -421,7 +422,7 @@ const RegisterClasses = () => {
                                         <img
                                             alt={`Profile image of ${student.name}`}
                                             className="rounded-circle profile-img"
-                                            src={student.img}
+                                            src={student.img ? student.img : perfillogo}
                                             width="80"
                                             height="80"
                                         />
